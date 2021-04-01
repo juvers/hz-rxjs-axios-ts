@@ -3,6 +3,7 @@ import { BehaviorSubject } from "rxjs";
 export const subject = new BehaviorSubject(null);
 const initialState: any = {
   systemVariables: [],
+  error: "",
 };
 
 let state = initialState;
@@ -14,11 +15,19 @@ const systemVariableStore = {
   },
   subscribe: (setState: any) => subject.subscribe(setState),
   sendData: (message: any) => {
-    state = {
-      ...state,
-      systemVariables: [...message],
-    };
-    subject.next(state);
+    if (message) {
+      state = {
+        ...state,
+        systemVariables: [...message],
+      };
+      subject.next(state);
+    } else {
+      state = {
+        ...state,
+        error: "No data returned",
+      };
+      subject.next(state);
+    }
   },
   initialState,
 };
